@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <title>Noll</title>
+    <style>
+
+        body { font: 12px Arial;}
+
+        path {
+            stroke: steelblue;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        text.shadow {
+            stroke: white;
+            stroke-width: 2.5px;
+            opacity: 0.9;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+
+    </style>
+</head>
+<div>
+    <body>
+        <h1><strong>My Stocks</strong></h1>
+
+        <form method="post" action="/stock">
+          <div>
+              <input type="text" name="input-text" placeholder="Stock Abbreviation">
+          </div>
+          <div>
+              <input type="submit" value="Enter" class="button">
+          </div>
+        </form>
+        <%=yield %>
+    </body>
+</div>
+
+
+</html>

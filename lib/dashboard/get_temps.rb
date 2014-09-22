@@ -1,7 +1,7 @@
 # require 'open-uri'
 # require 'nokogiri'
 
-class Dashboard::GetStocks
+class Dashboard::GetTemps
 
   def initialize(str)
     @str = str
@@ -12,7 +12,7 @@ class Dashboard::GetStocks
     # @base = URI.parse("http://#{@host}")
   end
 
-  def get_stocks
+  def get_temps
     'hi'
     # urls = []
 

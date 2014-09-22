@@ -3,48 +3,145 @@
 
 <head>
     <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <title>Noll</title>
-    <style>
-
-        body { font: 12px Arial;}
-
-        path {
-            stroke: steelblue;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        text.shadow {
-            stroke: white;
-            stroke-width: 2.5px;
-            opacity: 0.9;
-        }
-
-        .axis path,
-        .axis line {
-            fill: none;
-            stroke: grey;
-            stroke-width: 1;
-            shape-rendering: crispEdges;
-        }
-
-    </style>
 </head>
 <div>
     <body>
-        <h1><strong>My Stocks</strong></h1>
+        <h1><strong>Wind Chills</strong></h1>
 
-        <form method="post" action="/stock">
+        <form method="post" action="/temps">
           <div>
-              <input type="text" name="input-text" placeholder="Stock Abbreviation">
-          </div>
-          <div>
-              <input type="submit" value="Enter" class="button">
+              <input type="submit" value="Update" class="button">
           </div>
         </form>
         <%=yield %>
     </body>
 </div>
+<body>
+    <svg id="visualisation" width="1000" height="500"></svg>
+    <script>
 
+      var temps = [{rec_time: '2011', temp: 44}, {rec_time: '2012', temp: 40}, {rec_time: '2013', temp: 22}]
+
+      var yqlCallback = function(data) {
+        var wind = data.query.results.channel.wind;
+        var current_time = new Date();
+        var split_time = current_time.getTime();
+        var minutes = 1000 * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var d = new Date();
+        var t = d.getTime();
+        var y = Math.round(t / years);
+
+        var formatted_time = y
+        console.log(formatted_time);
+        temps.push({rec_time: 4, temp: wind.chill});
+        // console.log(wind.chill);
+        // console.log(data);
+      };
+
+        var data = temps;
+
+var vis = d3.select('#visualisation'),
+    WIDTH = 500,
+    HEIGHT = 500,
+    MARGINS = {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 50
+    },
+    xRange = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(data, function(d) {
+      return d.rec_time;
+    }), d3.max(data, function(d) {
+      return d.rec_time;
+    })]),
+    yRange = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(data, function(d) {
+      return d.temp;
+    }), d3.max(data, function(d) {
+      return d.temp;
+    })]),
+    xAxis = d3.svg.axis()
+      .scale(xRange)
+      .tickSize(5)
+      // .tickSubdivide(true)
+    yAxis = d3.svg.axis()
+      .scale(yRange)
+      .tickSize(5)
+      .orient('left')
+      .tickSubdivide(true);
+
+vis.append('svg:g')
+  .attr('class', 'x axis')
+  .attr('transform', 'translate(0,' + (HEIGHT - MARGINS.bottom) + ')')
+  .call(xAxis);
+
+vis.append('svg:g')
+  .attr('class', 'y axis')
+  .attr('transform', 'translate(' + (MARGINS.left) + ',0)')
+  .call(yAxis);
+
+vis.append('text')
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", data.length)
+    .attr("y", data.length)
+    .text("years");
+
+vis.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("wind chill");
+
+var lineFunc = d3.svg.line()
+  .x(function(d) {
+    return xRange(d.rec_time);
+  })
+  .y(function(d) {
+    return yRange(d.temp);
+  })
+  .interpolate('linear');
+
+  vis.append('svg:path')
+  .attr('d', lineFunc(data))
+  .attr('stroke', 'blue')
+  .attr('stroke-width', 2)
+  .attr('fill', 'none');
+
+
+
+
+        $('submit').click(function(e) {
+        var yqlCallback = function(data) {
+            var wind = data.query.results.channel.wind;
+            var current_time = new Date();
+            temps.push({rec_time: 4, temp: wind.chill});
+            console.log(wind.chill);
+            console.log(data);
+          };
+        });
+
+
+    </script>
+
+    <script src="https://query.yahooapis.com/v1/public/yql?q=select wind from weather.forecast where woeid in (select woeid from geo.places(1) where text='chicago, il')&format=json&callback=yqlCallback"></script>
+
+    <script type="text/javascript">
+
+        // $('.button').click(function(e) {
+        //   var sym;
+        //   sym = $('.input-text').val();
+        //   server_side_request(sym);
+        //   return e.preventDefault();
+        // });
+
+    </script>
+</body>
 
 </html>

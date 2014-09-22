@@ -9,16 +9,16 @@ require_relative 'lib/dashboard.rb'
   set :bind, '10.10.10.10'
 
   get '/' do
-    erb :get_stock
+    erb :get_temps
   end
 
-  post '/stock' do
-    @stocks = Dashboard::GetStocks.new(params["input-text"]).get_stocks
-    puts @stocks
+  post '/temps' do
+    @temps = Dashboard::GetTemps.new(params["input-text"]).get_temps
+    puts @temps
     erb :result
   end
 
   get '/' do
-    redirect '/stock'
+    redirect '/temps'
   end
 # end

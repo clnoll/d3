@@ -1,10 +1,10 @@
 require 'sinatra'
 require_relative 'lib/dashboard.rb'
 
-# class Dashboard::App < Sinatra::Application
-#   configure :development do |c|
-#     c.set :bind, '10.10.10.10'
-#   end
+class Dashboard::App < Sinatra::Application
+  configure :development do |c|
+    c.set :bind, '10.10.10.10'
+  end
 
   set :bind, '10.10.10.10'
 
@@ -19,4 +19,4 @@ require_relative 'lib/dashboard.rb'
   get '/' do
     redirect '/temps'
   end
-# end
+end

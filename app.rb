@@ -13,7 +13,7 @@ require_relative 'lib/dashboard.rb'
   end
 
   post '/temps' do
-    @temps = Dashboard::GetTemps.new(params["input-text"]).get_temps
+    @temps = Dashboard::GetTemps.new.get_temps
     puts @temps
     erb :result
   end

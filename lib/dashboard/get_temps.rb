@@ -3,7 +3,7 @@
 
 class Dashboard::GetTemps
 
-  def initialize(str)
+  def initialize
     @str = str
     # @events = []
     # @uri = URI.parse(@str)
@@ -13,7 +13,7 @@ class Dashboard::GetTemps
   end
 
   def get_temps
-    'hi'
+    @str
     # urls = []
 
     # # Open the page associated with the base url of the event

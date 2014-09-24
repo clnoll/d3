@@ -37,44 +37,31 @@
 <div>
     <body>
         <h1><strong>Wind Chills</strong></h1>
-
-        <form method="post" action="/temps">
-          <div>
-              <input type="submit" value="Update" class="button">
-          </div>
+        <div id="option">
+            <input name="updateButton"
+                         type="button"
+                        value="Update"
+                        onclick="updateData()" />
+        </div>
+        <form method="post" class="update" action="/temps">
+          <!-- <div>
+              <button onclick=yqlCallback()>Update</button>
+          </div> -->
         </form>
         <%=yield %>
     </body>
 </div>
 <body>
-    <!-- <svg id="visualisation" width="1000" height="500"></svg> -->
     <script>
 
-      var temps = [{rec_time: '0000', temp: 44}, {rec_time: '0100', temp: 40}, {rec_time: '0200', temp: 22}]
+      var temps = [{rec_time: 0000, temp: 44}, {rec_time: 0100, temp: 40}, {rec_time: 0200, temp: 22}]
 
       var yqlCallback = function(data) {
         var wind = data.query.results.channel.wind;
-        var current_time = new Date();
-        // var split_time = current_time.getTime();
-        // var minutes = 1000 * 60;
-        // var hours = minutes * 60;
-        // var days = hours * 24;
-        // var years = days * 365;
-        // var d = new Date();
-        // var t = d.getTime();
-        // var y = Math.round(t / years);
-
-        // setup time formatting for x axis
-        // for (temp=0; temp<temps.length; temp++) {
-        //     temps[temp] =
-        // }
-
-
-        var formatted_time = current_time
-        console.log(formatted_time);
-        temps.push({rec_time: temps[temps.length-1].rec_time + 100, temp: wind.chill});
-        // console.log(wind.chill);
-        // console.log(data);
+        setInterval(function() { temps.push({rec_time: temps[temps.length-1].rec_time + 100, temp: wind.chill})
+            console.log(temps);
+            temps.splice(temps.length-1);
+        }, 3000);
       };
 
         var w = 2400;
@@ -86,13 +73,16 @@
             .append("svg")
             .attr("width", w)
             .attr("height", h);
+
         var xScale = d3.scale.linear()
             .domain([0, d3.max(dataset, function(d) {
             return d.rec_time })])
-            .range([padding,200-padding])
+            .range([padding,200-padding]);
+
         var yScale = d3.scale.linear()
             .domain([-50, h])
-            .range([h-padding, padding])
+            .range([h-padding, padding]);
+
         svg.selectAll("circle")
             .data(dataset)
             .enter()
@@ -148,21 +138,75 @@
             .attr("transform", "translate(" + padding + ",0)")
             .call(yAxis)
 
+        var refreshGraph = function() {
+            svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) {
+                    return xScale(d.rec_time);
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.temp);
+                })
+                .attr("r", function(d) {
+                    return Math.sqrt(d.temp);
+                })
+        }
+
+        function updateData(){
+            var dataset = temps;
+
+            var xScale = d3.scale.linear()
+                .domain([0, d3.max(dataset, function(d) {
+                return d.rec_time })])
+                .range([padding,200-padding]);
+
+            var yScale = d3.scale.linear()
+                .domain([-50, h])
+                .range([h-padding, padding]);
+
+            svg.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d) {
+                    return xScale(d.rec_time);
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.temp);
+                })
+                .attr("r", function(d) {
+                    return Math.sqrt(d.temp);
+                });
+
+            svg.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function(d) {
+                    return d.rec_time + ", " + d.temp;
+                })
+                .attr("x", function(d) {
+                    return xScale(d.rec_time);
+                })
+                .attr("y", function(d) {
+                    return yScale(d.temp);
+                })
+                .attr("font-family", "cursive")
+                .attr("font-size", "9px")
+                .attr("fill", "blue");
+
+            d3.max(dataset, function(d) {
+                return d.rec_time
+
+            })
+
+        }
 
     </script>
 
     <script src="https://query.yahooapis.com/v1/public/yql?q=select wind from weather.forecast where woeid in (select woeid from geo.places(1) where text='chicago, il')&format=json&callback=yqlCallback"></script>
-
-    <script type="text/javascript">
-
-        // $('.button').click(function(e) {
-        //   var sym;
-        //   sym = $('.input-text').val();
-        //   server_side_request(sym);
-        //   return e.preventDefault();
-        // });
-
-    </script>
 </body>
 
 </html>

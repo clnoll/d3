@@ -13,8 +13,8 @@ require_relative 'lib/dashboard.rb'
   end
 
   post '/temps' do
-    @temps = Dashboard::GetTemps.new.get_temps
-    puts @temps
+    # @temps = Dashboard::GetTemps.new.get_temps
+    # puts @temps
     erb :result
   end
 

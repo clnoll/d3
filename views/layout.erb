@@ -48,7 +48,7 @@
 <body>
     <script>
 
-      var temps = [{rec_time: 0000, temp: 44}, {rec_time: 0200, temp: 40}, {rec_time: 0400, temp: 22}]
+      var temps = [{rec_time: 000, temp: 44}]
       var getTimes = function() {
                 if (temps[temps.length-1].rec_time <=2400)
                     {return temps[temps.length-1].rec_time + 200}
@@ -64,9 +64,9 @@
         }, 3000);
       };
 
-        var w = 500;
-        var h = 100;
-        var padding = 20;
+        var w = 1000;
+        var h = 200;
+        var padding = 30;
         var dataset = temps;
 
         var svg = d3.select('body')
@@ -76,7 +76,7 @@
 
         var xScale = d3.scale.linear()
             .domain([0, 2400])
-            .range([padding,200-padding]);
+            .range([padding,500-padding]);
 
         var yScale = d3.scale.linear()
             .domain([-50, h])
@@ -94,6 +94,14 @@
             })
             .attr("r", function(d) {
                 return Math.sqrt(d.temp);
+            })
+            .style("fill", function(d) {
+                var returnColor;
+                if (d.temp >= 60) { returnColor = "red"; }
+                else if (d.temp >= 40) { returnColor = "yellow"; }
+                else if (d.temp >= 30) { returnColor = "green"; }
+                else if (d.temp < 30) { returnColor = "blue"; };
+                return returnColor;
             });
 
         svg.selectAll("text")
@@ -177,6 +185,14 @@
                 })
                 .attr("r", function(d) {
                     return Math.sqrt(d.temp);
+                })
+                .style("fill", function(d) {
+                    var returnColor;
+                    if (d.temp >= 60) { returnColor = "red"; }
+                    else if (d.temp >= 40) { returnColor = "yellow"; }
+                    else if (d.temp >= 30) { returnColor = "green"; }
+                    else if (d.temp < 30) { returnColor = "blue"; };
+                    return returnColor;
                 });
 
             svg.selectAll("text")

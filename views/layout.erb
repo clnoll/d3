@@ -79,7 +79,7 @@
             .range([padding,500-padding]);
 
         var yScale = d3.scale.linear()
-            .domain([-50, h])
+            .domain([-50, 100])
             .range([h-padding, padding]);
 
         svg.selectAll("circle")
@@ -104,22 +104,22 @@
                 return returnColor;
             });
 
-        svg.selectAll("text")
-            .data(dataset)
-            .enter()
-            .append("text")
-            .text(function(d) {
-                return d.rec_time + ", " + d.temp;
-            })
-            .attr("x", function(d) {
-                return xScale(d.rec_time);
-            })
-            .attr("y", function(d) {
-                return yScale(d.temp);
-            })
-            .attr("font-family", "cursive")
-            .attr("font-size", "9px")
-            .attr("fill", "blue");
+        // svg.selectAll("text")
+        //     .data(dataset)
+        //     .enter()
+        //     .append("text")
+        //     .text(function(d) {
+        //         return d.rec_time + ", " + d.temp;
+        //     })
+        //     .attr("x", function(d) {
+        //         return xScale(d.rec_time);
+        //     })
+        //     .attr("y", function(d) {
+        //         return yScale(d.temp);
+        //     })
+        //     .attr("font-family", "cursive")
+        //     .attr("font-size", "9px")
+        //     .attr("fill", "blue");
 
         d3.max(dataset, function(d) {
             return d.rec_time
@@ -195,27 +195,27 @@
                     return returnColor;
                 });
 
-            svg.selectAll("text")
-                .data(dataset)
-                .enter()
-                .append("text")
-                .text(function(d) {
-                    return d.rec_time + ", " + d.temp;
-                })
-                .attr("x", function(d) {
-                    return xScale(d.rec_time);
-                })
-                .attr("y", function(d) {
-                    return yScale(d.temp);
-                })
-                .attr("font-family", "cursive")
-                .attr("font-size", "9px")
-                .attr("fill", "blue");
+            // svg.selectAll("text")
+            //     .data(dataset)
+            //     .enter()
+            //     .append("text")
+            //     .text(function(d) {
+            //         return d.rec_time + ", " + d.temp;
+            //     })
+            //     .attr("x", function(d) {
+            //         return xScale(d.rec_time);
+            //     })
+            //     .attr("y", function(d) {
+            //         return yScale(d.temp);
+            //     })
+            //     .attr("font-family", "cursive")
+            //     .attr("font-size", "9px")
+            //     .attr("fill", "blue");
 
-            d3.max(dataset, function(d) {
-                return d.rec_time
+            // d3.max(dataset, function(d) {
+            //     return d.rec_time
 
-            })
+            // })
 
         }
 

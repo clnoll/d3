@@ -43,28 +43,28 @@
                         value="Update"
                         onclick="updateData()" />
         </div>
-        <form method="post" class="update" action="/temps">
-          <!-- <div>
-              <button onclick=yqlCallback()>Update</button>
-          </div> -->
-        </form>
-        <%=yield %>
     </body>
 </div>
 <body>
     <script>
 
-      var temps = [{rec_time: 0000, temp: 44}, {rec_time: 0100, temp: 40}, {rec_time: 0200, temp: 22}]
+      var temps = [{rec_time: 0000, temp: 44}, {rec_time: 0200, temp: 40}, {rec_time: 0400, temp: 22}]
+      var getTimes = function() {
+                if (temps[temps.length-1].rec_time <=2400)
+                    {return temps[temps.length-1].rec_time + 200}
+                else {return 0}
+                }
 
       var yqlCallback = function(data) {
         var wind = data.query.results.channel.wind;
-        setInterval(function() { temps.push({rec_time: temps[temps.length-1].rec_time + 100, temp: wind.chill})
+        setInterval(function() { temps.push({
+            rec_time: getTimes(),
+            temp: wind.chill})
             console.log(temps);
-            temps.splice(temps.length-1);
         }, 3000);
       };
 
-        var w = 2400;
+        var w = 500;
         var h = 100;
         var padding = 20;
         var dataset = temps;
@@ -75,8 +75,7 @@
             .attr("height", h);
 
         var xScale = d3.scale.linear()
-            .domain([0, d3.max(dataset, function(d) {
-            return d.rec_time })])
+            .domain([0, 2400])
             .range([padding,200-padding]);
 
         var yScale = d3.scale.linear()
@@ -121,6 +120,7 @@
         var xAxis = d3.svg.axis()
             .scale(xScale)
             .ticks(6)
+            .tickFormat(d3.format("t"))
             .orient("bottom");
 
         svg.append("g")
@@ -158,8 +158,7 @@
             var dataset = temps;
 
             var xScale = d3.scale.linear()
-                .domain([0, d3.max(dataset, function(d) {
-                return d.rec_time })])
+                .domain([0, 2400])
                 .range([padding,200-padding]);
 
             var yScale = d3.scale.linear()

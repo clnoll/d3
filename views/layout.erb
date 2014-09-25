@@ -50,13 +50,17 @@
 
     <script>
 
+      // Seed data for temperatures and recorded times
       var temps = [{rec_time: 000, temp: 14}, {rec_time: 200, temp: 34}, {rec_time: 400, temp: 50}]
+
+      // Get recorded times, starting back at 0 when one "day" has passed
       var getTimes = function() {
                 if (temps[temps.length-1].rec_time <=2400)
                     {return temps[temps.length-1].rec_time + 200}
                 else {return 0}
                 }
 
+      // Query Yahoo API to get wind chill data every 3 seconds.  Push into temps array.
       var yqlCallback = function(data) {
         var wind = data.query.results.channel.wind;
         setInterval(function() { temps.push({
@@ -66,24 +70,31 @@
         }, 3000);
       };
 
+        // Set up dimensions for the scatterplot
         var w = 500;
         var h = 200;
         var padding = 30;
+
+        // Set data source
         var dataset = temps;
 
+        // Append svg element to the body
         var svg = d3.select('body')
             .append("svg")
             .attr("width", w)
             .attr("height", h);
 
+        // Set the scale and range of the x-axis (one day)
         var xScale = d3.scale.linear()
             .domain([0, 2400])
             .range([padding,w-padding]);
 
+        // Set the scale and range of the y-axis (estimated NTE -50 and 100 degrees)
         var yScale = d3.scale.linear()
-            .domain([0, 100])
+            .domain([-50, 100])
             .range([h-padding, padding]);
 
+        // Create circle data points and assign size and color functions
         svg.selectAll("circle")
             .data(dataset)
             .enter()
@@ -106,10 +117,12 @@
                 return returnColor;
             });
 
+        // Find the dataset max
         d3.max(dataset, function(d) {
             return d.rec_time
         })
 
+        // Create and format the x-axis
         var xAxis = d3.svg.axis()
             .scale(xScale)
             .ticks(6)
@@ -121,6 +134,7 @@
             .attr("transform", "translate(0," + (h-padding) + ")")
             .call(xAxis);
 
+        // Create and format the y-axis
         var yAxis = d3.svg.axis()
             .scale(yScale)
             .orient("left")
@@ -131,22 +145,7 @@
             .attr("transform", "translate(" + padding + ",0)")
             .call(yAxis)
 
-        var refreshGraph = function() {
-            svg.selectAll("circle")
-                .data(dataset)
-                .enter()
-                .append("circle")
-                .attr("cx", function(d) {
-                    return xScale(d.rec_time);
-                })
-                .attr("cy", function(d) {
-                    return yScale(d.temp);
-                })
-                .attr("r", function(d) {
-                    return Math.sqrt(d.temp);
-                })
-        }
-
+        // Refresh the graph on button click event
         function updateData(){
             var dataset = temps;
 

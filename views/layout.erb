@@ -50,7 +50,7 @@
 
     <script>
 
-      var temps = [{rec_time: 000, temp: 44}]
+      var temps = [{rec_time: 000, temp: 44}, {rec_time: 000, temp: 50}]
       var getTimes = function() {
                 if (temps[temps.length-1].rec_time <=2400)
                     {return temps[temps.length-1].rec_time + 200}
@@ -78,7 +78,7 @@
 
         var xScale = d3.scale.linear()
             .domain([0, 2400])
-            .range([padding,500-padding]);
+            .range([padding,w-padding]);
 
         var yScale = d3.scale.linear()
             .domain([0, 100])
@@ -99,7 +99,7 @@
             })
             .style("fill", function(d) {
                 var returnColor;
-                if (d.temp >= 60) { returnColor = "red"; }
+                if (d.temp >= 50) { returnColor = "red"; }
                 else if (d.temp >= 40) { returnColor = "yellow"; }
                 else if (d.temp >= 30) { returnColor = "green"; }
                 else if (d.temp < 30) { returnColor = "blue"; };
